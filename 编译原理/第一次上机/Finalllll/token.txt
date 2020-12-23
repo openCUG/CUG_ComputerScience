@@ -1,0 +1,12 @@
+Constant
++       
+Constant
+*       
+Constant
+/       
+Constant
+=       
+Constant
++       
+Constant
+#

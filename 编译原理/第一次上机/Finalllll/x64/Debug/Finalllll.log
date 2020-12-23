@@ -1,0 +1,5 @@
+﻿  LexAnalysis.cpp
+D:\repos\Compiler\Finalllll\Finalllll\LexAnalysis.cpp(15,23): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+D:\repos\Compiler\Finalllll\Finalllll\LexAnalysis.cpp(109,23): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+D:\repos\Compiler\Finalllll\Finalllll\LexAnalysis.cpp(169,46): warning C4834: 放弃具有 "nodiscard" 属性的函数的返回值
+  Finalllll.vcxproj -> D:\repos\Compiler\Finalllll\x64\Debug\Finalllll.exe
