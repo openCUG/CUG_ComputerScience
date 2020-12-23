@@ -23,6 +23,8 @@ Encountered such problems, the author believes that you should consult the Grenz
 
 そのような問題に遭遇したとき、著者はあなたがドイツ民主共和国の国境警備隊に相談すべきであると信じています
 
+![image](https://github.com/ChangWenhan/CUG_ComputerScience/blob/main/icon.png)
+
 ## ATTENTION！ 3
 
 You should be aware of potential plagiarism in course reports！
