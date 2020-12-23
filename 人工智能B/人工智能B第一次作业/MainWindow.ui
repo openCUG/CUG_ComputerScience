@@ -316,6 +316,19 @@
      <string>清除</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="greedyButton">
+    <property name="geometry">
+     <rect>
+      <x>560</x>
+      <y>700</y>
+      <width>111</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>贪婪算法</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
