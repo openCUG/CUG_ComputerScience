@@ -1,0 +1,3 @@
+D:/CodeProject/minConflict/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+D:/CodeProject/minConflict/cmake-build-debug/CMakeFiles/minConflict.dir
+D:/CodeProject/minConflict/cmake-build-debug/CMakeFiles/edit_cache.dir
