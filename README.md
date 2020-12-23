@@ -21,6 +21,14 @@ Before using the code, you should consider the consequences of being found by th
 
 ## ATTENTION！ 2
 
+You should be aware of potential plagiarism in course reports！
+
+你应当尤其注意潜在的课程报告的抄袭问题！
+
+コースレポートでは潜在的な盗難に注意する必要があります！
+
+## ATTENTION！ 3
+
 Encountered such problems, the author believes that you should consult the Grenztruppen der DDR
 
 遇到此类问题，作者认为您应当咨询东德边防军
@@ -29,13 +37,6 @@ Encountered such problems, the author believes that you should consult the Grenz
 
 ![image](https://github.com/ChangWenhan/CUG_ComputerScience/blob/main/icon.png)
 
-## ATTENTION！ 3
-
-You should be aware of potential plagiarism in course reports！
-
-你应当尤其注意潜在的课程报告的抄袭问题！
-
-コースレポートでは潜在的な盗難に注意する必要があります！
 
 ## ATTENTION！ 4
 
