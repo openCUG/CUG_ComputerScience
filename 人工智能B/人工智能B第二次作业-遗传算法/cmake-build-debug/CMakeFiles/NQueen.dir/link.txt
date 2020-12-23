@@ -1,0 +1,3 @@
+"D:\CLion 2020.1.3\bin\cmake\win\bin\cmake.exe" -E rm -f CMakeFiles\NQueen.dir/objects.a
+D:\mingw64\bin\ar.exe cr CMakeFiles\NQueen.dir/objects.a @CMakeFiles\NQueen.dir\objects1.rsp
+D:\mingw64\bin\g++.exe -g   -Wl,--whole-archive CMakeFiles\NQueen.dir/objects.a -Wl,--no-whole-archive  -o NQueen.exe -Wl,--out-implib,libNQueen.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\NQueen.dir\linklibs.rsp
