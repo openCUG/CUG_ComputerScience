@@ -1,0 +1,34 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+D:/CodeProject/ClimbHill/climbHill.h
+vector
+-
+iostream
+-
+stdlib.h
+-
+time.h
+-
+algorithm
+-
+
+D:/CodeProject/ClimbHill/main.cpp
+iostream
+-
+climbHill.h
+D:/CodeProject/ClimbHill/climbHill.h
+vector
+-
+time.h
+-
+string
+-
+stdlib.h
+-
+

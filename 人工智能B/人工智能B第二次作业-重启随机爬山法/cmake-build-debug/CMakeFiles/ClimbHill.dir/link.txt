@@ -1,0 +1,3 @@
+"D:\CLion 2020.1.3\bin\cmake\win\bin\cmake.exe" -E rm -f CMakeFiles\ClimbHill.dir/objects.a
+D:\mingw64\bin\ar.exe cr CMakeFiles\ClimbHill.dir/objects.a @CMakeFiles\ClimbHill.dir\objects1.rsp
+D:\mingw64\bin\g++.exe -g   -Wl,--whole-archive CMakeFiles\ClimbHill.dir/objects.a -Wl,--no-whole-archive  -o ClimbHill.exe -Wl,--out-implib,libClimbHill.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\ClimbHill.dir\linklibs.rsp
