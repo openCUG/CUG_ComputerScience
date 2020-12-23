@@ -329,6 +329,19 @@
      <string>贪婪算法</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="aStarButton">
+    <property name="geometry">
+     <rect>
+      <x>690</x>
+      <y>700</y>
+      <width>111</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>A*算法</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

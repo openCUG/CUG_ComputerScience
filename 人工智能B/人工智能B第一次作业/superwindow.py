@@ -6,6 +6,7 @@ from paint import PaintWidget   #含有画布
 from dfsClass import *  #含有链表类
 from bfsClass import *  #含有节点和图类
 import numpy as np
+import time as t
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
@@ -13,12 +14,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.initialBox()
         #按键的槽函数
-        self.dfsButton.clicked.connect(self.dfsDeal)
-        self.bfsButton.clicked.connect(self.bfsDeal)
-        self.greedyButton.clicked.connect(self.greedyTest)
-        self.clearButton.clicked.connect(self.clearChecked)
+        self.signalAndConnection()
         #图的数据以及节点的标号
         self.readyPlaceHolder()
+        # 为A星算法进行准备工作
+        self.aStarPlaceHolder()
         # 为深度遍历进行准备工作
         self.dfsPlaceHolder()
         # 为广度遍历进行准备工作
@@ -28,6 +28,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # 添加画布以及绘画事件
         self.painterPlaceHolder()
         self.show()
+
+    #槽函数放置于此
+    def signalAndConnection(self):
+        self.dfsButton.clicked.connect(self.dfsDeal)
+        self.bfsButton.clicked.connect(self.bfsDeal)
+        self.greedyButton.clicked.connect(self.greedyTest)
+        self.clearButton.clicked.connect(self.clearChecked)
+        self.aStarButton.clicked.connect(self.clickTest)
 
     #对话框的初始化规格
     def initialBox(self):
@@ -236,3 +244,50 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def greedyTest(self):
         weights = np.array(self.weight).reshape(self.n, self.n)
         self.Dijkstra(self.n, weights)
+        self.greedyPlaceHolder()
+
+    #以aStar开头的都是和A*算法相关的函数
+    def aStarPlaceHolder(self):
+        self.path = []
+        self.pathTest = []
+        self.pathWeight = []
+        self.straightDis = [366,0,160,242,161,176,77,151,226,244,241,234,380,100,193,253,329,80,199,374]
+        self.placeName = ['A','B','C','D','E','F','G','H','I','L','M','N','O','P','R','S','T','U','V','Z']
+        self.placeNum = [3,10,8,7,99,11,99,99,99,5,6,99,1,9,13,12,4,99,99,2]
+        self.disDict = dict(zip(self.placeName,self.straightDis))
+        self.numNameDict = dict(zip(self.placeName,self.placeNum))
+        self.weightForAStar = [[1, 2, 71], [2, 1, 71], [1, 12, 151], [12, 1, 151],
+                               [2, 3, 75], [3, 2, 75], [3, 12, 140], [12, 3, 140],
+                               [3, 4, 118], [4, 3, 118], [4, 5, 111], [5, 4, 115],
+                               [5, 6, 70], [6, 5, 70], [6, 7, 75], [7, 6, 75],
+                               [7, 8, 120], [8, 7, 120], [8, 9, 138], [9, 8, 138],
+                               [8, 13, 146], [13, 8, 146], [9, 10, 101], [10, 9, 101],
+                               [9, 13, 97], [13, 9, 97], [10, 11, 211], [11, 10, 211],
+                               [11, 12, 99], [12, 11, 99], [12, 13, 80], [13, 12, 80]]
+
+    def get_key(self, dict, value):
+        return [k for k, v in dict.items() if v == value][0]
+
+    def aStar(self, nodeNow, path, pathTest, pathWeight):
+        while nodeNow != 10:
+            print(nodeNow)
+            for i in self.weightForAStar:
+                if i[0] == nodeNow:
+                    self.pathTest.append(i[1])
+                    self.pathWeight.append(i[2] + self.disDict[self.get_key(self.numNameDict, i[1])])
+                    # print(self.pathTest)
+                    # print(self.pathWeight)
+                    index = self.pathWeight.index(min(self.pathWeight))
+            self.path.append(self.pathTest[index])
+            self.pathTest = []
+            self.pathWeight = []
+            self.dict[nodeNow].setChecked(True)
+            nodeNow = self.numNameDict[self.get_key(self.numNameDict, self.path[len(self.path) - 1])]
+        self.dict[10].setChecked(True)
+        self.aStarPlaceHolder()
+
+    def clickTest(self):
+        nodeNow = 3
+        self.path.append(3)
+        self.aStar(nodeNow, self.path, self.pathTest, self.pathWeight)
+        print(self.path)
