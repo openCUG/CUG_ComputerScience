@@ -1,4 +1,4 @@
-# CUG_ComputerScience
+# CUG_CWH_ComputerScience
 Created this Repository to commemorate my university life
 
 In order to make up for the pain caused by everything two years ago, still working hard.
