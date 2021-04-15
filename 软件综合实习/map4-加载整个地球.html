@@ -22,11 +22,12 @@
     require([
     "esri/Map",
     "esri/views/SceneView",
-    "dojo/domReady!"
-    ], function(Map, SceneView) {
+    "esri/widgets/Search",
+    "dojo/domReady!",
+    ], function(Map, SceneView,Search) {
 
     var map = new Map({
-        basemap: "streets",
+        basemap: "osm",
         ground: "world-elevation"
     });
 
@@ -37,11 +38,20 @@
         center: [-101.17, 21.78]
     });
 
+    var searchWidget = new Search({
+        view: view
+    });
+
+    view.ui.add(searchWidget,{
+        position:"top-right",
+        index: 0
+    });
+
     });
 </script>
 </head>
 
 <body>
-<div id="viewDiv"></div>
+    <div id="viewDiv"></div>
 </body>
 </html>
