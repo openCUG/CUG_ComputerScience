@@ -8,14 +8,14 @@
     <style>
         html, body ,#map{ height: 100%; width: 100%; margin: 0; padding: 0; }
         #HomeButton {
-            left: 25px;
+            left: 20px;
             position: absolute;
-            top: 93px;
+            top: 170px;
             z-index: 50;
         }
 
         #LocateButton {
-            left: 25px;
+            left: 20px;
             position: absolute;
             top: 130px;
             z-index: 50;
@@ -87,10 +87,25 @@
     </script>
 </head>
 <body class="claro">
+    <style>
+        body{
+            background-color: blanchedalmond;
+        }
+    </style>
     <div id="map" >
         <div id="HomeButton"></div>
         <div id="LocateButton"></div>
         <div id="BasemapToggle"></div>
+        <button onclick="toEarth()">三维视图</button>
+        <button onclick="toDataPage()">难民信息</button>
+        <script>
+            function toEarth(){
+                window.location.href='map4-加载整个地球.html';
+            }
+            function toDataPage(){
+                window.location.href='map6-难民地理信息.html';
+            }
+        </script>
     </div>
 </body>
 </html>
