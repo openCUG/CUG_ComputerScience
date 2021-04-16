@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no">
+    <title>Bookmark Widget (Editable)</title>
+    <link rel="stylesheet" href="https://js.arcgis.com/3.35/esri/themes/calcite/dijit/calcite.css">
+    <link rel="stylesheet" href="https://js.arcgis.com/3.35/esri/themes/calcite/esri/esri.css">
+    <style>
+      html, body, #map {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+      .bookmark-container {
+        position: absolute;
+        top: 180px;
+        left: 15px;
+        padding: 1rem;
+        background: #ffffff;
+        border-radius: 4px;
+        border: 1px solid #eeeeee;
+      }
+
+      #search {
+        display: block;
+        position: absolute;
+        z-index: 2;
+        top: 20px;
+        left: 74px;
+      }
+
+      #HomeButton {
+        position: absolute;
+        top: 95px;
+        left: 16px;
+        z-index: 50;
+      }
+
+      #LocateButton {
+        position: absolute;
+        top: 140px;
+        left: 16px;
+        z-index: 50;
+      }
+
+      #BasemapToggle {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        z-index: 50;
+      }
+    </style>
+
+    <script src="https://js.arcgis.com/3.35/"></script>
+    <script>
+      require([
+          "esri/basemaps",
+          "dojo/parser",
+          "esri/map",
+          "esri/dijit/Bookmarks",
+          "esri/dijit/Search",
+          "esri/dijit/HomeButton",
+          "esri/dijit/LocateButton",
+          "esri/dijit/BasemapToggle",
+          "esri/dijit/OverviewMap",
+          "esri/dijit/Scalebar",
+          "dijit/layout/BorderContainer", "dijit/layout/ContentPane",
+          "dojo/domReady!"
+        ],
+        function (esriBasemaps,parser,Map, Bookmarks,Search,HomeButton,LocateButton,BasemapToggle,OverviewMap,Scalebar){
+
+          esriBasemaps.delorme = {
+                baseMapLayers: [
+                //初始化中国矢量地图服务
+                    { url: "http://cache1.arcgisonline.cn/arcgis/rest/services/ChinaOnlineCommunity/MapServer" }
+                ],
+                //缩略图
+                thumbnailUrl: "Imgs/shiliang.jpg",
+                title: "矢量图"
+          };
+
+          parser.parse(); 
+
+          var map = new Map("map", {
+            //basemap: "topo",
+            basemap:'delorme',
+            center: [114.3996484, 30.52428033],
+            zoom: 15
+          });
+
+
+          // Create the bookmark widget
+          // specify "editable" as true to enable editing
+          var bookmarks = new Bookmarks({
+            map: map,
+            bookmarks: [],
+            editable: true
+          }, "bookmarks");
+
+          var search = new Search({
+            map: map
+          }, "search");
+          search.startup();
+
+          var home = new HomeButton({
+            map: map
+          }, "HomeButton");
+          home.startup();
+
+          geoLocate = new LocateButton({
+            map: map
+          }, "LocateButton");
+          geoLocate.startup();
+
+          var toggle = new BasemapToggle({
+            map: map,
+            basemap: "satellite"
+          }, "BasemapToggle");
+          toggle.startup();
+
+          var overviewMapDijit = new OverviewMap({
+            map: map,
+            visible: true,
+            attachTo: "bottom-left"
+          });
+          overviewMapDijit.startup();
+
+          var scalebar = new Scalebar({
+            map: map,
+            // "dual" displays both miles and kilometers
+            // "english" is the default, which displays miles
+            // use "metric" for kilometers
+            scalebarUnit: "metric",
+            visible: true,
+            attachTo: 'bottom-right'
+          });
+
+          // Bookmark data objects
+          var bookmarkJSON = {
+            first: {
+              "extent": {
+                "xmin": -12975100,
+                "ymin": 3993900,
+                "xmax": -12964100,
+                "ymax": 4019500,
+                "spatialReference": {
+                  "wkid": 102100,
+                  "latestWkid": 3857
+                }
+              },
+              "name": "Palm Springs, CA"
+            },
+            second: {
+              "extent": {
+                "xmin": -13052100,
+                "ymin": 4024900,
+                "xmax": -13041100,
+                "ymax": 4050500,
+                "spatialReference": {
+                  "wkid": 102100,
+                  "latestWkid": 3857
+                }
+              },
+              "name": "Redlands, California"
+            },
+            third: {
+              "extent": {
+                "xmin": -13048800,
+                "ymin": 3844800,
+                "xmax": -13037800,
+                "ymax": 3870400,
+                "spatialReference": {
+                  "wkid": 102100,
+                  "latestWkid": 3857
+                }
+              },
+              "name": "San Diego, CA"
+            },
+          };
+
+          // Add bookmarks to the widget
+          Object.keys(bookmarkJSON).forEach(function (bookmark){
+            bookmarks.addBookmark(bookmarkJSON[bookmark]);
+          });
+        });
+    </script>
+  </head>
+  <body class="calcite">
+    <div id="search"></div>
+    <div id="map"
+          data-dojo-type="dijit/layout/ContentPane" 
+          data-dojo-props="region:'center'" 
+          style="padding:0">
+      <div id="HomeButton"></div>
+      <div id="LocateButton"></div>
+      <div id="BasemapToggle"></div>
+    </div>
+    <div class="bookmark-container">
+      <div id="bookmarks"></div>
+    </div>
+  </body>
+</html>
+
