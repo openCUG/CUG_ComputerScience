@@ -82,6 +82,60 @@
             });
             overviewMapDijit.startup();
 
+            var bookmarks = new Bookmarks({
+            map: map,
+            bookmarks: [],
+            editable: true
+            }, "bookmarks");
+
+            // Bookmark data objects
+            var bookmarkJSON = {
+                first: {
+                "extent": {
+                    "xmin": -12975100,
+                    "ymin": 3993900,
+                    "xmax": -12964100,
+                    "ymax": 4019500,
+                    "spatialReference": {
+                    "wkid": 102100,
+                    "latestWkid": 3857
+                    }
+                },
+                "name": "Palm Springs, CA"
+                },
+                second: {
+                "extent": {
+                    "xmin": -13052100,
+                    "ymin": 4024900,
+                    "xmax": -13041100,
+                    "ymax": 4050500,
+                    "spatialReference": {
+                    "wkid": 102100,
+                    "latestWkid": 3857
+                    }
+                },
+                "name": "Redlands, California"
+                },
+                third: {
+                "extent": {
+                    "xmin": -13048800,
+                    "ymin": 3844800,
+                    "xmax": -13037800,
+                    "ymax": 3870400,
+                    "spatialReference": {
+                    "wkid": 102100,
+                    "latestWkid": 3857
+                    }
+                },
+                "name": "San Diego, CA"
+                },
+            };
+
+            // Add bookmarks to the widget
+            Object.keys(bookmarkJSON).forEach(function (bookmark){
+                bookmarks.addBookmark(bookmarkJSON[bookmark]);
+            });
+
         });
 
 
@@ -99,7 +153,8 @@
         <div id="BasemapToggle"></div>
         <button onclick="toEarth()">三维视图</button>
         <button onclick="toDataPage()">难民信息</button>
-        <button onclick='payfor()'>在线打赏</button>
+        <button onclick='toPay()'>在线打赏</button>
+        <button onclick="toTest()">测试界面</button>
         <script>
             function toEarth(){
                 window.location.href='map4-加载整个地球.html';
@@ -109,8 +164,12 @@
                 window.location.href='map6-难民地理信息.html';
             }
 
-            function payfor(){
-            	window.location.href='Bonus.html'
+            function toPay(){
+                window.location.href='Bonus.html';
+            }
+
+            function toTest(){
+                window.location.href='map7-测试.html';
             }
         </script>
     </div>
