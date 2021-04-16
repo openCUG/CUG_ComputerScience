@@ -27,7 +27,7 @@
         display: block;
         position: absolute;
         z-index: 2;
-        top: 30px;
+        top: 40px;
         left: 74px;
       }
 
@@ -51,11 +51,21 @@
         right: 10px;
         z-index: 50;
       }
+
+      #titlePane{ 
+        width:290px;
+        background-color: white;
+      }
     </style>
 
     <script src="https://js.arcgis.com/3.35/"></script>
     <script>
       require([
+          "dojo/dom",
+          "esri/Color",
+          "dojo/keys",
+          "esri/config",
+          "esri/sniff",
           "esri/basemaps",
           "dojo/parser",
           "esri/map",
@@ -66,10 +76,19 @@
           "esri/dijit/BasemapToggle",
           "esri/dijit/OverviewMap",
           "esri/dijit/Scalebar",
-          "dijit/layout/BorderContainer", "dijit/layout/ContentPane",
+          "esri/SnappingManager",
+          "esri/dijit/Measurement",
+          "esri/layers/FeatureLayer",
+          "dijit/TitlePane",
+          "dijit/form/CheckBox",
+          "dijit/layout/BorderContainer", 
+          "dijit/layout/ContentPane",
           "dojo/domReady!"
+          
         ],
-        function (esriBasemaps,parser,Map, Bookmarks,Search,HomeButton,LocateButton,BasemapToggle,OverviewMap,Scalebar){
+        function (dom,Color,keys,esriConfig, has,esriBasemaps,parser,Map, Bookmarks,Search,HomeButton,
+                  LocateButton,BasemapToggle,OverviewMap,Scalebar,
+                  SnappingManager, Measurement, FeatureLayer){
 
           esriBasemaps.delorme = {
                 baseMapLayers: [
@@ -129,9 +148,6 @@
 
           var scalebar = new Scalebar({
             map: map,
-            // "dual" displays both miles and kilometers
-            // "english" is the default, which displays miles
-            // use "metric" for kilometers
             scalebarUnit: "metric",
             visible: true,
             attachTo: 'bottom-right'
@@ -184,6 +200,13 @@
           Object.keys(bookmarkJSON).forEach(function (bookmark){
             bookmarks.addBookmark(bookmarkJSON[bookmark]);
           });
+
+          var measurement = new Measurement({
+            
+            map: map
+          }, dom.byId("measurementDiv"));
+          measurement.startup();
+          
         });
     </script>
   </head>
@@ -198,6 +221,12 @@
           data-dojo-type="dijit/layout/ContentPane" 
           data-dojo-props="region:'center'" 
           style="padding:0">
+      <div style="position:absolute; right:95px; top:41px; z-Index:999;">
+        <div id="titlePane" data-dojo-type="dijit/TitlePane" data-dojo-props="title:'Measurement', closable:false">
+          <div id="measurementDiv"></div>
+          <span style="font-size:smaller;padding:5px 5px;">Press <b>CTRL</b> to enable snapping.</span>
+        </div>
+      </div>
       <div id="HomeButton"></div>
       <div id="LocateButton"></div>
       <div id="BasemapToggle"></div>
