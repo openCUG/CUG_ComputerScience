@@ -1,0 +1,184 @@
+
+-----------------Tree no. 1 ----------------
+Attribute used for splitting at root = 1
+Height of the tree 		 = 9
+Accuracy on test set 	 = 91.64247131347656
+Accuracy on training set = 96.30000305175781
+
+Number of times an attribute is used as the splitting function
+0 22
+1 1
+2 23
+3 34
+4 31
+5 27
+6 33
+7 32
+8 32
+
+Total no of nodes in the tree = 235
+
+-----------------Tree no. 2 ----------------
+Attribute used for splitting at root = 6
+Height of the tree 		 = 9
+Accuracy on test set 	 = 92.78307342529297
+Accuracy on training set = 94.9000015258789
+
+Number of times an attribute is used as the splitting function
+0 34
+1 39
+2 40
+3 40
+4 18
+5 20
+6 1
+7 40
+8 40
+
+Total no of nodes in the tree = 272
+
+-----------------Tree no. 3 ----------------
+Attribute used for splitting at root = 6
+Height of the tree 		 = 9
+Accuracy on test set 	 = 92.57569122314453
+Accuracy on training set = 96.0
+
+Number of times an attribute is used as the splitting function
+0 38
+1 32
+2 38
+3 38
+4 3
+5 38
+6 1
+7 18
+8 36
+
+Total no of nodes in the tree = 242
+
+-----------------Tree no. 4 ----------------
+Attribute used for splitting at root = 2
+Height of the tree 		 = 9
+Accuracy on test set 	 = 92.32683563232422
+Accuracy on training set = 95.20000457763672
+
+Number of times an attribute is used as the splitting function
+0 37
+1 13
+2 1
+3 39
+4 33
+5 37
+6 37
+7 33
+8 30
+
+Total no of nodes in the tree = 260
+
+-----------------Tree no. 5 ----------------
+Attribute used for splitting at root = 3
+Height of the tree 		 = 9
+Accuracy on test set 	 = 91.37287139892578
+Accuracy on training set = 97.79999542236328
+
+Number of times an attribute is used as the splitting function
+0 26
+1 27
+2 20
+3 1
+4 21
+5 20
+6 16
+7 15
+8 24
+
+Total no of nodes in the tree = 170
+
+-----------------Tree no. 6 ----------------
+Attribute used for splitting at root = 6
+Height of the tree 		 = 9
+Accuracy on test set 	 = 91.3313980102539
+Accuracy on training set = 96.69999694824219
+
+Number of times an attribute is used as the splitting function
+0 30
+1 30
+2 25
+3 29
+4 30
+5 28
+6 1
+7 18
+8 29
+
+Total no of nodes in the tree = 220
+
+-----------------Tree no. 7 ----------------
+Attribute used for splitting at root = 8
+Height of the tree 		 = 9
+Accuracy on test set 	 = 90.89588928222656
+Accuracy on training set = 96.69999694824219
+
+Number of times an attribute is used as the splitting function
+0 38
+1 23
+2 21
+3 30
+4 26
+5 15
+6 29
+7 30
+8 1
+
+Total no of nodes in the tree = 213
+
+-----------------Tree no. 8 ----------------
+Attribute used for splitting at root = 4
+Height of the tree 		 = 9
+Accuracy on test set 	 = 90.64703369140625
+Accuracy on training set = 96.5999984741211
+
+Number of times an attribute is used as the splitting function
+0 30
+1 33
+2 31
+3 30
+4 1
+5 22
+6 29
+7 26
+8 27
+
+Total no of nodes in the tree = 229
+
+-----------------Tree no. 9 ----------------
+Attribute used for splitting at root = 3
+Height of the tree 		 = 9
+Accuracy on test set 	 = 90.5226058959961
+Accuracy on training set = 97.5
+
+Number of times an attribute is used as the splitting function
+0 22
+1 2
+2 33
+3 1
+4 22
+5 24
+6 28
+7 21
+8 19
+
+Total no of nodes in the tree = 172
+
+---------------------------Statistics of ensemble----------------------
+
+Effect of number of trees in the forest on train and test accuracies
+1 93.7 94.08959
+2 93.7 94.08959
+3 93.7 94.08959
+4 93.7 94.08959
+5 93.7 94.08959
+6 93.7 94.08959
+7 93.7 94.08959
+8 93.7 94.08959
+9 93.7 94.08959

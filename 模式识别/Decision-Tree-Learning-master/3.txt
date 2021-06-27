@@ -1,0 +1,120 @@
+Attribute used for splitting at root = 0
+Height of the tree 		 = 85
+Accuracy on test set 	 = 88.69763946533203
+Accuracy on training set = 99.80000305175781
+
+Number of times an attribute is used as the splitting function
+0 1
+1 3
+2 7
+3 7
+4 2
+5 3
+6 8
+7 2
+8 4
+9 2
+10 2
+11 2
+12 3
+13 4
+14 5
+15 3
+16 2
+17 3
+18 3
+19 2
+20 2
+21 3
+22 4
+23 2
+24 2
+25 3
+26 3
+27 4
+28 2
+29 3
+30 2
+31 3
+32 2
+33 2
+34 3
+35 2
+36 2
+37 2
+38 2
+39 2
+40 2
+41 2
+42 2
+43 10
+44 2
+45 2
+46 9
+47 2
+48 2
+49 2
+50 2
+51 2
+52 2
+53 4
+54 2
+55 2
+56 2
+57 2
+58 6
+59 2
+60 2
+61 3
+62 3
+63 3
+64 2
+65 2
+66 2
+67 4
+68 2
+69 2
+70 2
+71 2
+72 2
+73 2
+74 2
+75 2
+76 2
+77 2
+78 2
+79 2
+80 2
+81 2
+82 2
+83 2
+84 2
+
+Total no of nodes in the tree = 234
+
+----------------------Pruning starts-------------------
+
+Prediction accuracy on validation set = 88.84280395507812
+Prediction accuracy on validation set = 88.96723175048828
+Prediction accuracy on validation set = 89.21609497070312
+Prediction accuracy on validation set = 89.42347717285156
+Prediction accuracy on validation set = 89.50643157958984
+Prediction accuracy on validation set = 89.630859375
+Prediction accuracy on validation set = 89.85897827148438
+Prediction accuracy on validation set = 90.75072479248047
+Prediction accuracy on validation set = 90.81294250488281
+Prediction accuracy on validation set = 90.91663360595703
+Prediction accuracy on validation set = 90.99958801269531
+Prediction accuracy on validation set = 91.31066131591797
+Prediction accuracy on validation set = 91.45582580566406
+Prediction accuracy on validation set = 91.6632080078125
+Prediction accuracy on validation set = 91.84986114501953
+Prediction accuracy on validation set = 92.14019012451172
+Prediction accuracy on validation set = 93.40522766113281
+Prediction accuracy on validation set = 93.61260986328125
+Prediction accuracy on validation set = 93.90294647216797
+Prediction accuracy on validation set = 94.02737426757812
+Prediction accuracy on validation set = 94.08959197998047
+
+Accuracy after pruning on test set = 94.08959197998047
+Accuracy after pruning on training set = 93.69999694824219
