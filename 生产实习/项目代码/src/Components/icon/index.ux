@@ -1,0 +1,49 @@
+<template>
+  <text
+    class="font-icon"
+    style="font-size: {{size * ratio}}px;color: {{color}};"
+    >{{ unescapeFontIconCode(iconMap[type]) }}
+  </text>
+</template>
+<style lang="less">
+@font-face {
+  font-family: iconfont;
+  src: url('./icomoon.ttf');
+}
+
+.font-icon {
+  font-family: iconfont;
+  text-align: center;
+}
+</style>
+<script>
+import { icons } from './icon'
+
+export default {
+  data() {
+    return {
+      iconMap: icons,
+      ratio: 1,
+    }
+  },
+  props: {
+    type: {
+      default: 'empty',
+    },
+    size: {
+      default: 14,
+    },
+    color: {
+      default: '',
+    },
+  },
+  onInit() {
+    const designWidth = this.$app.$def.manifest.config.designWidth || 750
+    this.ratio = designWidth / 360
+  },
+  unescapeFontIconCode(iconCode = '') {
+    let entity = '&#x' + iconCode
+    return unescape(entity.replace(/&#x/g, '%u').replace(/;/g, ''))
+  },
+}
+</script>

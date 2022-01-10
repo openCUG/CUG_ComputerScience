@@ -1,0 +1,176 @@
+<!-- 此处如果不加上/index.ux  会显示Calender页面不存在 -->
+<import name="q-calendar" src="../Components/calendar/index.ux"></import>
+<import name="q-button" src="../Components/button/index.ux"></import>
+<template>
+  <div class="qaui-wrap">
+    <q-button ontap="changeType" width="300">查看全部计划内事项</q-button>
+    <q-calendar
+      if="type==='default'"
+      calDL="{{getcalDL1()}}"
+      nameL="{{getnameL()}}"
+      type="default"
+      description="{{getDesc()}}"
+     
+    ></q-calendar>
+    <q-calendar
+      if="type==='list'"
+      calDL="{{getcalDL1()}}"
+      nameL="{{getnameL()}}"
+      type="list"
+      range="{{getRange()}}"
+      description="{{getDesc()}}"
+      
+    ></q-calendar>
+  </div>
+</template>
+
+<script>
+import storage from '@system.storage'
+import router from '@system.router'
+import prompt from "@system.prompt";
+export default {
+   
+  data() {
+    return {
+      CalToDoList:'',
+      CalDoingList:'',
+      CalDoneList:'',
+      nameList:'',
+      type: 'default',
+      ran:['2022-1', '2022-1'],
+      desc: [
+        {
+          date: '2022-01-15',//对于月，一位月份格式为0a月，十位为0
+          top: '1项',
+          bottom: '事件截止',
+        },
+        {
+          date: '2022-01-21',
+          top: '2项',
+          bottom: '事件截止',
+        },
+        {
+          date: '2022-03-25',
+          top: '1项',
+          bottom: '事件截止',
+        },
+      ],
+    }
+    
+  },
+
+  onInit() {
+    this.$page.setTitleBar({ text: '计划内事项查看' })
+  },
+
+  changeType() {
+    this.type === 'default' ? (this.type = 'list') : (this.type = 'default')
+    console.log(this.type);
+    
+    
+  },
+  getcalDL1(){
+     let arr=new Array();
+    let temp=new Array();
+    let str=this.CalDoingList.replace('[','')
+    str=str.replace(']','')
+    arr=str.split(',')//数组经参数传递之后，合并为了含，的字符串，需要分割
+    for (let i = 0; i < arr.length; i++) {
+      temp.push(arr[i])
+    }
+    
+    return temp
+  },
+  getnameL(){
+    let arr=new Array();
+    let temp=new Array();
+    let str=this.nameList.replace('[','')
+    str=str.replace(']','')
+    arr=str.split(',')//数组经参数传递之后，合并为了含，的字符串，需要分割
+    for (let i = 0; i < arr.length; i++) {
+      temp.push(arr[i])
+    }
+    // console.log(676,temp)
+    return temp;
+
+  },
+  getDesc(){
+    let res=new Array();
+    let temp;
+    let strArr=this.CalDoingList.split(',');
+    let str=this.nameList.replace('[','')
+    str=str.replace(']','')
+    let nameArr=str.split(',');
+    for (let i = 0; i < strArr.length; i++) {
+    let arr=strArr[i].match(/\d+/g);
+    if(arr[1].length==1) arr[1]='0'+arr[1];
+    if(arr[2].length==1) arr[2]='0'+arr[2];
+    let combination=arr.join('-');//使用正则表达式，删去字符串所有“-”
+    temp={
+      date: combination,
+      top: '',
+      bottom: '截止',
+      things:'',
+    };
+    res.push(temp);
+    }
+
+      for (let j = 0; j < res.length; j++) {
+        let count=0
+        let allthings=''
+        for(let k = 0; k < strArr.length; k++){
+    let arr=strArr[k].match(/\d+/g);
+    if(arr[1].length==1) arr[1]='0'+arr[1];
+    if(arr[2].length==1) arr[2]='0'+arr[2];
+    let combination=arr.join('-');//使用正则表达式，删去字符串所有“-”
+    if(combination==res[j].date) {
+      res[j].things=res[j].things+'  '+nameArr[k];
+      count=count+1;}
+    
+      }
+      res[j].top=''+count+'件';
+      }
+      
+    console.log(676,res)
+  
+    return res;
+          
+
+  },
+  getRange(){
+        let earliest=99999999,latest=0;//将日期转为八位整数比较大小     
+        let strArr=this.CalDoingList.split(',');
+        for (let i = 0; i < strArr.length; i++) {
+          let arr=strArr[i].match(/\d+/g);
+           if(arr[1].length==1) arr[1]='0'+arr[1];
+           if(arr[2].length==1) arr[2]='0'+arr[2];
+          let temp=arr.join('');//使用正则表达式，删去字符串所有“-”
+           //console.log(668,temp);
+          if(temp<earliest) earliest=temp;
+          if(temp>latest) latest=temp; 
+        }
+        let earstr;
+        if(earliest.toString().charAt(4)=='0') earstr=`${earliest.toString().substr(0,4)}-${earliest.toString().substr(5,1)}`;
+        else earstr=`${earliest.toString().substr(0,4)}-${earliest.toString().substr(4,2)}`;
+        
+        let latstr;
+        if(latest.toString().charAt(4)=='0') latstr=`${latest.toString().substr(0,4)}-${latest.toString().substr(5,1)}`;
+        else latstr=`${latest.toString().substr(0,4)}-${latest.toString().substr(4,2)}`;
+          //console.log(667,{earstr,latstr});
+          let boundry=new Array();
+          boundry.push(earstr);
+          boundry.push(latstr);
+          console.log(boundry);
+          return boundry;
+        
+  },
+}
+</script>
+
+<style lang="less">
+.qaui-wrap {
+  flex-direction: column;
+  align-items: center;
+  margin-top: 30px;
+}
+</style>

@@ -1,0 +1,69 @@
+{
+  "package": "life.cug.todo",
+  "name": "To Do",
+  "versionName": "2.2.1",
+  "versionCode": 221,
+  "minPlatformVersion": 1070,
+  "icon": "/Common/logo.png",
+  "deviceTypeList": [
+    "phone"
+  ],
+  "features": [
+    {
+      "name": "system.prompt"
+    },
+    {
+      "name": "system.router"
+    },
+    {
+      "name": "system.shortcut"
+    },
+    {
+      "name": "service.asr"
+    },
+    {
+      "name": "system.vibrator"
+    },
+    {
+      "name": "system.storage"
+    }
+  ],
+  "permissions": [
+    {
+      "origin": "*"
+    }
+  ],
+  "config": {
+    "logLevel": "debug",
+    "designWidth": 720,
+    "debug": true
+  },
+  "router": {
+    "entry": "MainPage",
+    "pages": {
+      "MainPage": {
+        "component": "index"
+      },
+      "Input": {
+        "component": "index"
+      },
+      "Calendar": {
+        "component": "index"
+      }
+    }
+  },
+  "display": {
+    "titleBarTextColor": "#ffffff",
+    "titleBarBackgroundColor": "#869ACC",
+    "statusBarBackgroundColor": "#869ACC",
+    "menu": true
+  },
+  "packageInfo": {
+    "originType": "quickapp-ide",
+    "toolkit": "1.9.8",
+    "timeStamp": "2022-01-09T13:21:37.791Z",
+    "node": "v14.16.0",
+    "platform": "win32",
+    "arch": "x64"
+  }
+}

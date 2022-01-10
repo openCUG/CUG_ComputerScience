@@ -1,0 +1,668 @@
+<import name="q-popover" src="qaui/src/components/popover/index"></import>
+
+<template>
+  <div class="input-page">
+    <div class='input-area'>
+      
+      <!-- 事项名称、语音输入 -->
+      <div class='event-input'>
+        <input type="text" placeholder='添加任务' value="{{eventName}}" onchange="updateValue"></input>                                                                                                                                                                                                                                                                                            
+        <div class='add-image' onclick='addEvent'></div>
+      </div>
+
+      <div class="blank-space">
+        <text>&nbsp;</text>
+      </div>
+      
+      <!-- 语音输入 -->
+      <div class='asr-area'>
+        <div class='asr-input' ontouchstart="startAsr" ontouchend="endAsr">
+          <div class="asr-btn {{scale}} {{enabled ? 'asr-btn-enabled' : 'asr-btn-disabled'}}">
+          </div>
+          <text>长按语音输入</text>
+        </div>
+        <!-- 输入截止日期 -->
+        <div class='time-area'>
+          <div class='time-input'>
+            <div class='date-image'></div>
+            <picker class='date-picker' type="date" value="{{end_date}}" onchange="getEndDate"></picker>
+            </div>
+        </div>
+      </div>
+
+      <!-- TODO 修改任务状态功能 -->
+      <!-- 修改任务状态 -->
+      <div class='task-status-area'>
+        <div class="pop-change">
+          <div class='change-image'></div>
+          <q-popover id="popoverText"
+            contents="{{ contents }}"
+            placement="{{ placementArr[1] }}"
+            popover-width="{{ popoverWidth }}"
+            trigger-size="{{ triggerSize }}"
+            offset="{{ offset }}"
+            arrow-space="{{ arrowSpace }}"
+            onmenu-item-tap="handleClick"
+         >
+          <text slot="trigger" class="rootText" value="{{task_status_text}}"></text>
+          </q-popover>
+        </div>
+        <!-- 删除当前任务 -->
+        <div class='delete-image' onclick="delEvent"></div>
+      </div>
+      
+    </div>
+  </div>
+</template>
+
+<script>
+import asr from '@service.asr'
+import storage from '@system.storage'
+import vibrator from '@system.vibrator'
+import router from '@system.router'
+import prompt from "@system.prompt";
+
+export default {
+  private: {
+    eventName: '',
+    nameBackUp: '',
+    start_date: '',
+    start_time: '',
+    end_date: '',
+    end_time: '',
+    checked: false,
+    enabled: false,
+    scale: '',
+    task_status_text: '',
+    popIdx: -1,
+  },
+  //修改任务时使用，新建时不使用
+  protected: {
+    pushName: '',
+    pushStart: '',
+    pushEnd: '',
+    pushType: '',
+    pushIdx: '',
+    
+
+    contents: [
+        {
+          content: '待办事项',
+          iconPath: '/Common/todo.png',
+        },
+        {
+          content: '计划内',
+          iconPath: '/Common/doing.png',
+        },
+        {
+          content: '已完成',
+          iconPath: '/Common/done.png',
+        },
+      ],
+      placementArr: [
+        'topLeft',
+        'top',
+        'topRight',
+        'leftTop',
+        'left',
+        'leftBottom',
+        'rightTop',
+        'right',
+        'rightBottom',
+        'bottomLeft',
+        'bottom',
+        'bottomRight',
+      ],
+      popoverWidth: 198,
+      triggerSize: [175, 69],
+      offset: [0, 0],
+      arrowSpace: 21,
+  },
+
+
+  handleClick(data) {
+    const { event, index } = data.detail
+    this.popIdx=index
+    if(index==0) this.task_status_text='设为待办事项'
+    else if(index==1) this.task_status_text='设为计划内'
+    else if(index==2) this.task_status_text='设为已完成'
+    else this.task_status_text='设置任务状态'
+  },
+
+  
+
+  onInit() {
+    this.$page.setTitleBar({ text: '添加任务' })
+    this.initAsr()
+    this.initTime()
+    this.eventName = this.pushName
+    this.popType=this.pushType
+    if(this.popType==0) this.task_status_text='已设为待办'
+    else if(this.popType==1) this.task_status_text='已设为计划内'
+    else if(this.popType==2) this.task_status_text='已设为已完成'
+    else this.task_status_text='设置任务状态'
+
+    if (this.pushStart != 'ok') {
+      let list2 = this.pushStart.split('&')
+      this.start_date = list2[0]
+      this.start_time = list2[1]
+    }
+    if (this.pushEnd != '不设置') {
+      let list1 = this.pushEnd.split('&')
+      this.end_date = list1[0]
+      this.end_time = list1[1]
+    }
+  },
+  onDestroy() {
+    asr.close()
+  },
+
+  //初始化picker显示内容（from为当前时间，to为一天后）
+  initTime() {
+    const date = new Date()
+    const Y = date.getFullYear()
+    const M = date.getMonth() + 1
+    const D = date.getDate()
+    const H = date.getHours()
+    const m = date.getMinutes()
+    this.start_date = Y + '-' + M + '-' + D
+    this.start_time = H + ':' + m
+    date.setTime(date.getTime() + 24 * 60 * 60 * 1000)
+    const TY = date.getFullYear()
+    const TM = date.getMonth() + 1
+    const TD = date.getDate()
+    const TH = date.getHours()
+    const Tm = date.getMinutes()
+    // this.end_date = TY + '年' + TM + '月' + TD + '日'
+    this.end_date = "设置截止时间"
+    this.end_time = TH + ':' + Tm
+  },
+
+  initAsr() {
+    let that = this
+    asr.init({
+      fail: function () {
+        that.$app.$def.makeToast('语音识别模块初始化失败！')
+      }
+    })
+    asr.onpartialresult = ({ result }) => {
+      this.eventName = this.nameBackUp + `${result}`
+    }
+    asr.oncompleteresult = ({ result }) => {
+      this.eventName = this.nameBackUp + `${result.match(/\[(.*)\]/)[1]}`
+    }
+    asr.onerror = (error) => {
+      this.text = `onerror: ${error}`
+    }
+  },
+  startAsr() {
+    let that = this
+    this.scale = 'scale'
+    this.nameBackUp = this.eventName
+    asr.start({
+      success: function () {
+        //多调用几遍使震动明显一些
+        vibrator.vibrate({ mode: 'short' })
+        vibrator.vibrate({ mode: 'short' })
+        vibrator.vibrate({ mode: 'short' })
+      },
+      fail: function (data, code) {
+        that.eventName = `start fail, code=${code}, data=${data}`
+      }
+    })
+  },
+  endAsr() {
+    let that = this
+    this.scale = 'stop'
+    asr.stop({
+      success: function () { },
+      fail: function (data, code) {
+        that.eventName = `stop fail, code=${code}, data=${data}`
+      }
+    })
+  },
+
+  updateValue(evt) {
+    this.eventName = evt.value
+  },
+
+  addEvent() {
+    if (this.eventName === '') {
+      this.$app.$def.makeToast('请输入待办事项名！')
+    }
+    else if(this.popIdx===-1){
+      this.$app.$def.makeToast('请设置任务状态！')
+    }
+    else {
+      let start = this.start_date + '&' + this.start_time
+      let end = this.end_date=="设置截止时间" ? '未设置' : this.end_date
+      let popType = this.popIdx
+      
+      let that = this
+      storage.get({
+        key: 'msg',
+        success: function (data) {
+          if (data != '') {
+            // string转数组
+            let list = JSON.parse(data)
+            // 修改事项时触发
+            if (that.pushType == 0) list.toDoList.splice(that.pushIdx, 1)
+            else if (that.pushType == 1) list.doingList.splice(that.pushIdx, 1)
+            else if (that.pushType == 2) list.doneList.splice(that.pushIdx, 1)
+            
+            // 判断todo/doing/done
+            if(popType == 0) {
+              prompt.showToast({message: "已将任务添加至待办事项！"});
+              list.toDoList.push({ name: that.eventName, start: start, end: end })
+            }
+            else if(popType == 1) {
+              prompt.showToast({message: "已将任务添加至计划内！"});
+              list.doingList.push({ name: that.eventName, start: start, end: end })
+            }
+            else if(popType == 2) {
+              prompt.showToast({message: "已将任务添加至已完成！"});
+              list.doneList.push({ name: that.eventName, start: start, end: end })
+            }
+            
+            // 保存list并返回
+            storage.set({
+              key: 'msg',
+              value: list,
+              success: function () {
+                that.eventName = ''
+                router.back()
+              },
+              fail: function (data, code) {
+                that.$app.$def.makeToast(`handling fail, code = ${code}`)
+              }
+            })
+          }
+        },
+        fail: function (data, code) {
+          that.$app.$def.makeToast(`handling fail, code = ${code}`)
+        }
+      })
+    }
+  },
+
+  delEvent(){
+    if (this.eventName === '') {
+      this.$app.$def.makeToast('任务为空，无法删除')
+      return
+    }
+
+    let that = this
+    storage.get({
+        key: 'msg',
+        success: function (data) {
+          if (data != '') {
+            // string转数组
+            let list = JSON.parse(data)
+            // 修改事项时触发
+            if (that.pushType == 0) list.toDoList.splice(that.pushIdx, 1)
+            else if (that.pushType == 1) list.doingList.splice(that.pushIdx, 1)
+            else if (that.pushType == 2) list.doneList.splice(that.pushIdx, 1)
+          
+          // 保存list并返回
+            storage.set({
+              key: 'msg',
+              value: list,
+              success: function () {
+                that.eventName = ''
+                prompt.showToast({
+                  message: "已将任务删除！"
+                });
+                router.back()
+              },
+              fail: function (data, code) {
+                that.$app.$def.makeToast(`handling fail, code = ${code}`)
+              }
+            })
+          }
+        },
+        fail: function (data, code) {
+          that.$app.$def.makeToast(`handling fail, code = ${code}`)
+        }
+    })
+  },
+
+  //以下为picker组件的函数
+  getStartDate(e) {
+    this.start_date = e.year + '-' + (e.month + 1) + '-' + e.day
+  },
+  getStartTime(e) {
+    this.start_time = e.hour + ':' + e.minute
+  },
+  getEndDate(e) {
+    this.end_date = e.year + '年' + (e.month + 1) + '月' + e.day + '日' 
+  },
+  getEndTime(e) {
+    this.end_time = e.hour + ':' + e.minute
+  },
+  
+  //切换是否no ddl
+  turnChecked() {
+    this.checked = !this.checked
+  },
+  //显示语音输入按钮
+  enableAsrBtn() {
+    this.enabled = !this.enabled
+  }
+}
+</script>
+
+<style lang="less">
+@import "../Common/css/font.css";
+
+/* 主Widget树 */
+.input-page {
+  flex-direction: column;
+  background-image: url("/Common/bg.png");
+  > text {
+    height: 200px;
+    font-size: 50px;
+    color: #000000;
+    color: #ffffff;
+    font-weight: bold;
+    text-align: center;
+    font-family: myfont, serif;
+  }
+  .input-area {
+    margin-top: auto;
+    padding-left: 50px;
+    padding-right: 50px;
+    flex-direction: column;
+    .task-area {
+      flex-direction: row;
+      .add-btn {
+        width: 150px;
+        height: 80px;
+        font-size: 35px;
+        border-radius: 25px;
+        color: #ffffff;
+        background-color: #473cb1;
+        align-self: flex-end;
+        margin-bottom: 30px;
+        margin-left: 300px;
+      }
+    }
+
+    .ddl-area {
+      flex-direction: row;
+      .ddl {
+        font-size: 25px;
+        color: #000000;
+        margin-top: 5px;
+        flex-wrap: nowrap;
+        font-family: myfont, serif;
+      }
+    }
+
+    .event-input {
+      height: 100px;
+      margin-top: 60px;
+      border-radius: 20px;
+      background-color: rgba(255,255,255,0.8);
+      border: 5px solid rgb(238, 240, 245);
+      flex-direction: row;
+      > input {
+        flex-grow: 1;
+        padding: 10px 30px;
+      }
+    }
+
+    .blank-space {
+      height: 30px;
+      flex-direction: row;
+    }
+
+    .asr-area {
+      flex-direction: row;
+      .asr-input {
+        > text {
+        width: 250px;
+        font-size: 30px;
+        color: rgb(0, 0, 0);
+        text-align: center;
+        font-family: myfont, serif;
+        }
+        flex-direction: row;
+        height: 70px;
+        width: 310px;
+        border-radius: 20px;
+        margin-bottom: 30px;
+        background-color: #ffffff;
+        border: 3px solid rgb(238, 240, 245);
+        .asr-image {
+          width: 40px;
+          height: 40px;
+          border-radius: 20px;
+          margin-top: 12px;
+          margin-left: 15px;
+          flex-shrink: 0;
+          background-image: url("/Common/asr.png");
+        }
+      }
+    }
+
+    .delete-image {
+        width: 100px;
+        height: 100px;
+        border-radius: 50px;
+        margin-top: 12px;
+        margin-bottom: 30px;
+        margin-left: auto;
+        flex-shrink: 0;
+        background-color: #fdeff2;
+        background-image: url("/Common/delete.png");
+        border-color: #e9dfe5;
+        border-style: solid;
+        border-width: 1px;
+        
+    }
+
+    .time-area {
+      flex-direction: row;
+      .time-input {
+        flex-direction: row;
+        height: 70px;
+        width: 310px;
+        margin-left: 30px;
+        border-radius: 20px;
+        margin-bottom: 30px;
+        background-color: #ffffff;
+        border: 3px solid rgb(238, 240, 245);
+        .date-image {
+          width: 40px;
+          height: 40px;
+          margin-top: 12px;
+          margin-left: 15px;
+          flex-shrink: 0;
+          background-image: url("/Common/calendar.png");
+        }
+        .date-picker {
+          width: 250px;
+          /* margin-left: 5px; */
+          right: 50%;
+          flex: 0;
+          font-family: myfont, serif;
+          color: rgb(0, 0, 0);
+          text-align:center;
+        }
+      }
+      > text {
+        width: 120px;
+        font-size: 30px;
+        color: rgb(0, 0, 0);
+        text-align: center;
+        font-family: myfont, serif;
+      }
+    }
+
+    .asr-btn {
+      flex: 0;
+    }
+  }
+}
+
+
+.normal-text {
+  padding-top: 50px;
+  padding-bottom: 50px;
+  width: 250px;
+  flex-wrap: nowrap;
+  font-size: 35px;
+  font-weight: bold;
+  font-family: myfont, serif;
+  color: #000000;
+}
+
+/* 按钮、图片 */
+.btn-check {
+  width: 40px;
+  height: 40px;
+  margin: 50px 10px 25px 225px;
+  border-radius: 20px;
+  border-width: 2px;
+  border-color: #808080;
+}
+
+.btn-checked {
+  border-width: 0px;
+  background-image: url("/Common/checked.png");
+}
+
+.add-image {
+  width: 50px;
+  height: 50px;
+  margin: 25px;
+  border-width: 0px;
+  flex-shrink: 0;
+  background-image: url("/Common/submit.png");
+}
+
+.asr-image2 {
+  width: 40px;
+  height: 40px;
+  border-radius: 48px;
+  /* margin: 40px 40px 40px 40px; */
+  flex-shrink: 0;
+  background-image: url("/Common/asr.png");
+}
+
+
+.asr-btn-enabled {
+  flex: 0;
+  height: 40px;
+  width: 40px;
+  border-radius: 20px;
+  /* border-width: 2px; */
+  border-color: rgb(238, 240, 245);
+  margin-left: 15px;
+  margin-top: 12px;
+  background-image: url("/Common/asr_scale.png");
+  background-color: #ffffff;
+}
+
+.asr-btn-disabled {
+  flex: 0;
+  height: 40px;
+  width: 40px;
+  border-radius: 20px;
+  /* border-width: 2px; */
+  border-color: rgb(238, 240, 245);
+  margin-left: 15px;
+  margin-top: 12px;
+  background-image: url("/Common/asr.png");
+  background-color: #ffffff;
+}
+
+.task-status-area {
+  flex-direction: row;
+
+  .pop-change {
+    > text {
+        width: 250px;
+        font-size: 30px;
+        text-align: center;
+        font-family: myfont, serif;
+      }
+      flex-direction: row;
+      height: 70px;
+      width: 296px;
+      border-radius: 20px;
+      margin-bottom: 30px;
+      background-color: #ffffff;
+      border: 3px solid rgb(238, 240, 245);
+
+      .qaui-popover-trigger{
+        flex-direction: row;
+        height: 70px;
+        width: 310px;
+        border-radius: 20px;
+        margin-bottom: 30px;
+        background-color: #ffffff;
+        border: 3px solid rgb(238, 240, 245);    
+      }
+
+      .rootText {
+        width: 248px;
+        height: 64px;
+        border-radius: 12px;
+        font-size: 30px;
+        color: rgb(0, 0, 0);
+        text-align: center;
+        line-height: 69px;
+        background-color: #ffffff;
+     }
+
+      .change-image{
+        flex: 0;
+        height: 40px;
+        width: 40px;
+        border-radius: 20px;
+        margin-top: 12px;
+        margin-left: 15px;
+        background-image: url("/Common/change.png");
+      } 
+  }
+
+  
+  
+}
+
+/* 动画 */
+.scale {
+  animation-name: scale;
+  animation-duration: 200ms;
+  animation-fill-mode: forwards;
+  animation-timing-function: linear;
+  animation-iteration-count: 1;
+}
+/* 放大倍数 */
+@keyframes scale {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.35);
+  }
+}
+
+.stop {
+  animation-name: stop;
+  animation-duration: 100ms;
+  animation-fill-mode: forwards;
+  animation-timing-function: linear;
+  animation-iteration-count: 1;
+}
+
+@keyframes stop {
+  from {
+    transform: scale(1.2);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+</style>
