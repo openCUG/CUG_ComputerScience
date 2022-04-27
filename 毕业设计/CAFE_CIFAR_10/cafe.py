@@ -7,7 +7,7 @@ In this file we update the previous code to make the program functional
 
 import os
 # setting GPUs
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+os.environ["CUDA_VISIBLE_DEVICES"] = "3"
 
 # set gpu growth
 from tensorflow.compat.v1 import ConfigProto
@@ -68,12 +68,40 @@ def vfl_cafe():
     file = open(filename + '.txt', 'w')
     file.close()
 
+    true_gradient_last_time = []
+
     for iter in range(max_iters):
         # select index
         random_lists = select_index(iter, data_number, batch_size)
         # take gradients
         true_gradient, batch_real_data, real_middle_input, middle_output_gradient, train_loss, train_acc \
             = take_gradient(number_of_workers, random_lists, real_data, real_labels, local_net, Server)
+
+        #TODO: 添加first shot时需要用到的true gradient，feature space = 256
+        for i in range(number_of_workers):  #append the gradient used in 1st shot
+            if iter == 0:
+                true_gradient_last_time.append(true_gradient[i+1])
+            # compute cosine similarity
+            tensor1_norm = tf.sqrt(tf.reduce_sum(tf.square(true_gradient[i+1][5])))
+            tensor2_norm = tf.sqrt(tf.reduce_sum(tf.square(true_gradient_last_time[i][5])))
+            tensor1_tensor2 = tf.reduce_sum(tf.multiply(true_gradient[i+1][5],true_gradient_last_time[i][5]))
+            temp_cosine_similarity = tensor1_tensor2/(tensor1_norm*tensor2_norm)
+            cosine_similarity = round(temp_cosine_similarity.numpy(), 5)
+            # print("cosine similarity is：", cosine_similarity)
+
+            if -1 <= cosine_similarity and cosine_similarity < -0.5:
+                for num in range(len(true_gradient[i+1])):
+                    true_gradient[i+1][num] = abs(cosine_similarity)*true_gradient[i+1][num] + (1-abs(cosine_similarity))*true_gradient_last_time[i][num]
+                true_gradient_last_time[i] = true_gradient[i+1]
+            elif 0.5 < cosine_similarity and cosine_similarity <= 1:
+                for num in range(len(true_gradient[i+1])):
+                    true_gradient[i+1][num] = abs(cosine_similarity)*true_gradient[i+1][num] + (1-abs(cosine_similarity))*true_gradient_last_time[i][num]
+                true_gradient_last_time[i] = true_gradient[i+1]
+            elif -0.5 < cosine_similarity and cosine_similarity < 0.5:
+                for num in range(len(true_gradient[i+1])):
+                    true_gradient[i+1][num] = (1-abs(cosine_similarity))*true_gradient[i+1][num] + abs(cosine_similarity)*true_gradient_last_time[i][num]
+                true_gradient_last_time[i] = true_gradient[i+1]
+
         '''Inner loop: CAFE'''
         # clear memory
         tf.keras.backend.clear_session()
