@@ -111,7 +111,7 @@ def vfl_cafe():
                         true_gradient[cosine_simi_be_sort[i][0] + 1][j])
         elif -1 <= total_cosine_similarity/number_of_workers and total_cosine_similarity/number_of_workers < 0:
             cosine_simi_be_sort.sort(key=lambda x: x[1], reverse=True)  # 针对余弦相似度从大到小排序
-            for j in range(6):
+            for i in range(6):
                 for j in range(len(true_gradient[cosine_simi_be_sort[i][0] + 1])):
                     true_gradient[cosine_simi_be_sort[i][0] + 1][j] = tf.zeros_like(
                         true_gradient[cosine_simi_be_sort[i][0] + 1][j])
